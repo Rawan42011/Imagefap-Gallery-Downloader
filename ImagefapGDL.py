@@ -15,11 +15,12 @@ imgnames = []           # List of all original jpg names with file extention
 imgURLs = []            # List of all URLs to HD jpg files with file extention
 galleryName = ""
 ghtml = ""              # gHTML = HTML code of full gallery
-
+gfirstrun = True
 
 def mainLoop():
-    global myURL, galleryName
-    displayHeader()
+    global myURL, galleryName, gfirstrun
+    displayHeader() 
+    gfirstrun = False   
     #Getting Info
     myURL = urllib.parse.unquote(input("Please input the gallery url: "))
     processGALLERY(myURL)
@@ -30,14 +31,18 @@ def mainLoop():
     finish()
 
 def displayHeader():
-    print("")
-    print(" ___                      __             ___                  _              _         ")
-    print("|_ _|_ __  __ _ __ _ ___ / _|__ _ _ __  |   \ _____ __ ___ _ | |___  __ _ __| |___ _ _ ")
-    print(" | || '  \/ _` / _` / -_)  _/ _` | '_ \ | |) / _ \ V  V / ' \| / _ \/ _` / _` / -_) '_|")
-    print(" |__|_|_|_\__,_\__, \___|_| \__,_| .__/ |___/\___/\_/\_/|_||_|_\___/\__,_\__,_\___|_|  ")
-    print("               |___/             |_|                                                   ")
-    print("")
-    print("")
+    if (gfirstrun == True): 
+        print("")
+        print(" ___                      __             ___                  _              _         ")
+        print("|_ _|_ __  __ _ __ _ ___ / _|__ _ _ __  |   \ _____ __ ___ _ | |___  __ _ __| |___ _ _ ")
+        print(" | || '  \/ _` / _` / -_)  _/ _` | '_ \ | |) / _ \ V  V / ' \| / _ \/ _` / _` / -_) '_|")
+        print(" |__|_|_|_\__,_\__, \___|_| \__,_| .__/ |___/\___/\_/\_/|_||_|_\___/\__,_\__,_\___|_|  ")
+        print("               |___/             |_|                                                   ")
+        print("")
+        print("")
+    else:
+        print("")
+
 
 def processGALLERY(URL):
     global galleryName, ghtml, imglist
@@ -144,15 +149,6 @@ def cleanup():
     global myURL, prURL, galleryName, ghtml, imglist, imgnames, imgURLs
     myURL, prURL, galleryName, ghtml = " " * 4             
     imglist, imgnames, imgURLs = [], [], []         
-    clear()    
     mainLoop()
-
-def clear(): 
-    # for windows 
-    if name == 'nt': 
-        _ = system('cls') 
-    # for mac and linux(here, os.name is 'posix') 
-    else: 
-        _ = system('clear') 
 
 mainLoop()
