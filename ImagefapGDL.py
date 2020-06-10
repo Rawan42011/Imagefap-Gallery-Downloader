@@ -16,6 +16,7 @@ imgURLs = []            # List of all URLs to HD jpg files with file extention
 galleryName = ""
 ghtml = ""              # gHTML = HTML code of full gallery
 gfirstrun = True
+errCount = 0           # Total amount of errors
 
 def mainLoop():
     global myURL, galleryName, gfirstrun
@@ -111,17 +112,21 @@ def getImageURLS(html):
 
 def download(ImgURLs):
     # Loops through the imgURLs and imgnames lists to save the numerically named hi-res image with the original filename
-    global imgnames
+    global imgnames, errCount
     lead = "Downloading HI-RES IMAGES............"
     last_msg_length = 0
     x=0
     for image in ImgURLs:
         image = str(image[0])
         name = str(imgnames[x])[2:-2]
-        with urllib.request.urlopen(image) as f:
-            imageContent = f.read()
-            with open(galleryName + '/' + name, "wb") as f:
-                f.write(imageContent)
+        try:
+             with urllib.request.urlopen(image) as f:
+                imageContent = f.read()
+                with open(galleryName + '/' + name, "wb") as f:
+                    f.write(imageContent)
+        except:
+           print("[Error]", end='\r')
+           errCount+=1
         if last_msg_length != 0: print(' ' * last_msg_length, end='\r')
         output = lead+"{} of {}".format(str(x+1), str(len(imglist))) + " : " + str(imgnames[x])[2:-2]
         last_msg_length = len(output)
@@ -135,18 +140,21 @@ def download(ImgURLs):
     return
  
 def finish():
+    global  errCount
+    if errCount>0: print(str(errCount) + " image(s) could not be downloaded.")
     print("All Done. Happy Fapping :-)")
     retry()
 
 def retry():
     response = input("Wanna do some more? [Y/N]: ")
     if response.lower() == "y": cleanup()
-    elif response.lower() == "n": exit()
-    else: print("Bruh. Not a valid response.")
+    elif response.lower() == "n": sys.exit()
+    else: print("Bruh. Not a valid response."); retry()
 
            
 def cleanup():
-    global myURL, prURL, galleryName, ghtml, imglist, imgnames, imgURLs
+    global myURL, prURL, galleryName, ghtml, imglist, imgnames, imgURLs, errCount
+    errCount=0
     myURL, prURL, galleryName, ghtml = " " * 4             
     imglist, imgnames, imgURLs = [], [], []         
     mainLoop()
