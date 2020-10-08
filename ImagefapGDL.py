@@ -148,7 +148,7 @@ def finish():
 def retry():
     response = input("Wanna do some more? [Y/N]: ")
     if response.lower() == "y": cleanup()
-    elif response.lower() == "n": sys.exit()
+    elif response.lower() == "n": quit(0)
     else: print("Bruh. Not a valid response."); retry()
 
            
