@@ -9,6 +9,7 @@ import time
 
 #----------------------- GLOBAL VARIABLES -------------------
 myURL = ""              # Friendly Name URL (user input)
+myPATH = ""             # Custom Save Path (default is same location as py-script)
 prURL = ""              # Processed URL with gid & view parameters
 imglist = []            # List of all numerical jpg names without file extention
 imgnames = []           # List of all original jpg names with file extention
@@ -26,9 +27,10 @@ def mainLoop():
     myURL = urllib.parse.unquote(input("Please input the gallery url: "))
     processGALLERY(myURL)
     #DoStuff
-    createFolder(galleryName)
+    myPATH = urllib.parse.unquote(input("Please input save location [Leave Blank for default]:  "))
+    createFolder(myPATH, galleryName)
     getImageURLS(prURL)
-    download(imgURLs)
+    download(myPATH, imgURLs)
     finish()
 
 def displayHeader():
@@ -54,6 +56,8 @@ def processGALLERY(URL):
         retry()
     #Step 1: Get Name of Gallery
     galleryName = getGalleryName(URL)
+
+
     #Step 2: Acquire HTML of gallery page
     ghtml =  urllib.request.urlopen(processURL(URL)).read() # gHTML = HTML code of gallery
     #Step 3: Find all Hi-Res images links on page
@@ -61,11 +65,13 @@ def processGALLERY(URL):
     print("[SUCCESS: Found \"" + galleryName + "\" with " + str(len(imglist)) + " images]")
     return
 
-def createFolder(DIRNAME):
+def createFolder(myPATH, DIRNAME):
+    full_path = myPATH
     dir_name = DIRNAME
     print("Creating DIRECTORY...................", end="", flush=True)
     try:
-        os.mkdir(dir_name)
+        # os.mkdir(dir_name)
+        os.mkdir(os.path.join(full_path, dir_name))
         print("[SUCCESS]")
     except:
         if os.path.isdir(dir_name) == True: 
@@ -110,7 +116,7 @@ def getImageURLS(html):
     sys.stdout.flush()
     return
 
-def download(ImgURLs):
+def download(myPATH, ImgURLs):
     # Loops through the imgURLs and imgnames lists to save the numerically named hi-res image with the original filename
     global imgnames, errCount
     lead = "Downloading HI-RES IMAGES............"
@@ -122,8 +128,12 @@ def download(ImgURLs):
         try:
              with urllib.request.urlopen(image) as f:
                 imageContent = f.read()
-                with open(galleryName + '/' + name, "wb") as f:
-                    f.write(imageContent)
+                if myPATH != "":
+                    with open(myPATH + '/' + galleryName + '/' + name, "wb") as f:
+                        f.write(imageContent)
+                else:
+                    with open(galleryName + '/' + name, "wb") as f:
+                        f.write(imageContent)
         except:
            print("[Error]", end='\r')
            errCount+=1
