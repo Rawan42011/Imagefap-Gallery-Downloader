@@ -1,5 +1,5 @@
 # Imagefap-Gallery-Downloader
-Python script that downloads an entire Imagefap-gallery
+Python script that downloads an entire Imagefap-gallery and keeps the filename intact.
 
 # Description
 Enter the url of the gallery you wish to download, and the script does the rest.
