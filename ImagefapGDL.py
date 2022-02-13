@@ -24,10 +24,11 @@ def mainLoop():
     displayHeader() 
     gfirstrun = False   
     #Getting Info
-    myURL = urllib.parse.unquote(input("Please input the gallery url: "))
-    processGALLERY(myURL)
+    myURL = urllib.parse.unquote(input("Please input the gallery url [Press Q to Quit]: "))
+    if myURL.lower() == "q": quit(0)
+    else : processGALLERY(myURL)
     #DoStuff
-    myPATH = urllib.parse.unquote(input("Please input save location [Leave Blank for default]:  "))
+    myPATH = urllib.parse.unquote(input("Please input save location [Press Enter for default]:  "))
     createFolder(myPATH, galleryName)
     getImageURLS(prURL)
     download(myPATH, imgURLs)
@@ -46,14 +47,13 @@ def displayHeader():
     else:
         print("")
 
-
 def processGALLERY(URL):
     global galleryName, ghtml, imglist
     print("Processing GALLERY...................", end="", flush=True)
     #Step 0: Check if valid url
     if (URL.find("https://www.imagefap.com/pictures/") == -1): 
         print("[ERROR IN URL]" )
-        retry()
+        cleanup()
     #Step 1: Get Name of Gallery
     galleryName = getGalleryName(URL)
 
@@ -112,7 +112,7 @@ def getImageURLS(html):
         print(output, end='\r')
         #sys.stdout.flush()
     if last_msg_length != 0: print(' ' * last_msg_length, end='\r')
-    print(lead+"[SUCCES]")
+    print(lead+"[SUCCESS]")
     sys.stdout.flush()
     return
 
@@ -144,7 +144,7 @@ def download(myPATH, ImgURLs):
         #sys.stdout.flush()
         x=x+1
     if last_msg_length != 0: print(' ' * last_msg_length, end='\r')
-    print(lead+"[SUCCES]")
+    print(lead+"[SUCCESS]")
     sys.stdout.flush()
     x=0
     return
@@ -153,15 +153,8 @@ def finish():
     global  errCount
     if errCount>0: print(str(errCount) + " image(s) could not be downloaded.")
     print("All Done. Happy Fapping :-)")
-    retry()
-
-def retry():
-    response = input("Wanna do some more? [Y/N]: ")
-    if response.lower() == "y": cleanup()
-    elif response.lower() == "n": quit(0)
-    else: print("Bruh. Not a valid response."); retry()
-
-           
+    cleanup()
+          
 def cleanup():
     global myURL, prURL, galleryName, ghtml, imglist, imgnames, imgURLs, errCount
     errCount=0
