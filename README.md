@@ -1,11 +1,9 @@
 # Imagefap-Gallery-Downloader
 Python script that downloads an entire Imagefap-gallery and keeps the filename intact.
+It is a rewrite of the original, aiming to improve speed.
 
-# Description
-Enter the url of the gallery you wish to download, and the script does the rest.
-It will create a folder with the name of the gallery (in the folder where this .py script is run), and download all hi-res images of the entire gallery into that folder with their original filename intact.
-
-![Screencap](https://raw.githubusercontent.com/Somnifer2000/Imagefap-Gallery-Downloader/master/img/screencap.gif)
+However, currently the script, althoug faster, results quite quickly in a 302-error loop.
+I still need to find a solution for this, so use at your own risk!
 
 # Requirements
 [Download Python](https://www.python.org/downloads/)
